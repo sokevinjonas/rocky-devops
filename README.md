@@ -3,21 +3,34 @@
 ![Rocky Linux](https://img.shields.io/badge/Rocky%20Linux-9-green)
 ![Vagrant](https://img.shields.io/badge/Vagrant-2.x-blue)
 ![VirtualBox](https://img.shields.io/badge/VirtualBox-7.x-orange)
+![Docker](https://img.shields.io/badge/Docker-Engine-blue)
 ![DevOps](https://img.shields.io/badge/Focus-DevOps-purple)
 
-## 📌 Description
+---
 
-**Rocky DevOps Environment** est un environnement de développement et de test DevOps automatisé basé sur **Vagrant**, **VirtualBox** et **Rocky Linux 9**.
+# 📌 Description
 
-L'objectif de ce projet est de créer une machine virtuelle locale proche d'un environnement serveur d'entreprise afin de pratiquer :
+**Rocky DevOps Environment** est un laboratoire DevOps local automatisé basé sur :
+
+* **Vagrant**
+* **VirtualBox**
+* **Rocky Linux 9**
+* **Docker**
+* **Docker Compose**
+
+L'objectif de ce projet est de créer une machine virtuelle proche d'un serveur d'entreprise afin de pratiquer :
 
 * l'administration Linux ;
 * l'automatisation d'infrastructure ;
+* la conteneurisation ;
 * le déploiement d'applications ;
-* la conteneurisation avec Docker ;
-* les outils DevOps modernes.
+* les pratiques DevOps modernes.
 
-Cette approche permet de reproduire un environnement serveur sans utiliser directement un VPS ou une infrastructure cloud.
+Ce projet suit une approche **Infrastructure as Code (IaC)** permettant de reconstruire un environnement complet avec une simple commande :
+
+```bash
+vagrant up
+```
 
 ---
 
@@ -25,7 +38,7 @@ Cette approche permet de reproduire un environnement serveur sans utiliser direc
 
 ```
 Machine physique
-(HP EliteBook / Ubuntu Desktop)
+(Ubuntu Desktop)
         |
         |
         v
@@ -35,14 +48,23 @@ Machine physique
         |
         |
         v
-+-----------------------------+
-|       Rocky Linux 9 VM      |
-|                             |
-|  - Docker Engine            |
-|  - Docker Compose           |
-|  - Nginx                    |
-|  - Services DevOps          |
-+-----------------------------+
++--------------------------------+
+|        Rocky Linux 9 VM        |
+|                                |
+|  - Docker Engine               |
+|  - Docker Compose              |
+|  - Git                         |
+|  - Outils système              |
+|  - Scripts automatisation      |
+|                                |
++--------------------------------+
+        |
+        |
+        v
++----------------+
+| Applications   |
+| Docker Compose |
++----------------+
 ```
 
 ---
@@ -51,34 +73,41 @@ Machine physique
 
 Ce laboratoire permet de pratiquer :
 
-## Linux Administration
+## 🐧 Administration Linux
 
 * gestion des utilisateurs ;
 * permissions fichiers ;
 * services systemd ;
 * gestion des paquets avec DNF ;
 * configuration réseau ;
-* sécurité Linux.
+* sécurité serveur.
 
-## Virtualisation
+---
+
+## 🖥️ Virtualisation
 
 * création de machines virtuelles ;
 * gestion du cycle de vie avec Vagrant ;
 * configuration réseau privée ;
 * gestion des ressources VM.
 
-## Conteneurisation
+---
 
-* installation Docker ;
+## 🐳 Conteneurisation
+
+* installation Docker automatisée ;
 * création d'images ;
-* utilisation de Docker Compose ;
+* utilisation Docker Compose ;
 * déploiement de services.
 
-## DevOps
+---
 
-* automatisation d'environnement ;
+## ⚙️ DevOps
+
 * Infrastructure as Code ;
-* préparation d'environnements reproductibles.
+* automatisation serveur ;
+* environnements reproductibles ;
+* préparation d'environnements proches production.
 
 ---
 
@@ -87,37 +116,42 @@ Ce laboratoire permet de pratiquer :
 | Technologie    | Rôle                          |
 | -------------- | ----------------------------- |
 | Rocky Linux 9  | Système serveur               |
-| Vagrant        | Automatisation de création VM |
+| Vagrant        | Création et automatisation VM |
 | VirtualBox     | Hyperviseur local             |
 | Docker         | Conteneurisation              |
 | Docker Compose | Orchestration locale          |
+| Bash Scripts   | Automatisation                |
 | Git            | Versionnement                 |
 
 ---
 
 # 📋 Prérequis
 
-Avant de commencer, installer :
+Installer :
 
 ## VirtualBox
 
-Vérifier :
+Vérification :
 
 ```bash
 virtualbox --version
 ```
 
+---
+
 ## Vagrant
 
-Vérifier :
+Vérification :
 
 ```bash
 vagrant --version
 ```
 
+---
+
 ## Git
 
-Vérifier :
+Vérification :
 
 ```bash
 git --version
@@ -141,7 +175,7 @@ cd rocky-devops
 
 ---
 
-## 2. Créer la machine virtuelle
+## 2. Création de la VM
 
 Lancer :
 
@@ -149,21 +183,126 @@ Lancer :
 vagrant up
 ```
 
-Lors du premier lancement, Vagrant télécharge automatiquement l'image Rocky Linux.
+Lors du premier démarrage :
+
+* Vagrant télécharge Rocky Linux ;
+* configure le réseau ;
+* monte les dossiers nécessaires ;
+* lance automatiquement le provisioning.
 
 ---
 
-## 3. Se connecter à la VM
+## 3. Connexion SSH
 
 ```bash
 vagrant ssh
 ```
 
-Vous devez obtenir :
+Résultat :
 
 ```bash
 [vagrant@rocky-devops ~]$
 ```
+
+---
+
+# ⚙️ Provisioning automatique
+
+La configuration du serveur est automatisée grâce aux scripts Bash.
+
+Structure :
+
+```
+scripts/
+
+├── setup-server.sh
+│
+├── install-tools.sh
+│
+├── install-docker.sh
+│
+└── create-workspace.sh
+```
+
+---
+
+## setup-server.sh
+
+Script principal d'orchestration.
+
+Il exécute les différentes étapes :
+
+```
+setup-server.sh
+
+        |
+        |
+        +---- install-tools.sh
+        |
+        +---- install-docker.sh
+        |
+        +---- create-workspace.sh
+```
+
+---
+
+## install-tools.sh
+
+Installe les outils système :
+
+* Git ;
+* Curl ;
+* Wget ;
+* Vim ;
+* Nano ;
+* Tree ;
+* Htop ;
+* outils réseau.
+
+---
+
+## install-docker.sh
+
+Installe automatiquement :
+
+* Docker Engine ;
+* Docker CLI ;
+* Containerd ;
+* Docker Compose Plugin.
+
+Le service Docker est :
+
+* activé au démarrage ;
+* démarré automatiquement ;
+* configuré pour l'utilisateur `vagrant`.
+
+---
+
+## create-workspace.sh
+
+Prépare les répertoires serveur :
+
+```
+/opt
+
+├── projects
+│
+└── docker
+```
+
+Ces dossiers pourront accueillir les applications.
+
+---
+
+# 🔄 Relancer la configuration
+
+Après modification des scripts :
+
+```bash
+vagrant provision
+```
+
+Cette commande rejoue uniquement la configuration sans recréer la VM.
 
 ---
 
@@ -181,46 +320,42 @@ Configuration actuelle :
 
 ---
 
-# 🐳 Installation Docker
+# 🔗 Gestion des projets
 
-Dans la VM :
+Les projets peuvent être connectés à la VM grâce aux dossiers synchronisés Vagrant.
 
-Mise à jour :
+Exemple :
 
-```bash
-sudo dnf update -y
+```
+ProjetsDevOps/
+
+├── rocky-devops
+│
+└── student-list
+    |
+    ├── backend
+    ├── frontend
+    └── docker-compose.yml
 ```
 
-Installation Docker :
+Configuration :
 
-```bash
-sudo dnf install docker-ce docker-ce-cli containerd.io docker-compose-plugin -y
+```ruby
+config.vm.synced_folder "../student-list",
+"/home/vagrant/projects/student-list",
+type: "rsync"
 ```
 
-Activation du service :
+Dans Rocky Linux :
 
-```bash
-sudo systemctl enable docker
-sudo systemctl start docker
+```
+/home/vagrant/projects/student-list
 ```
 
-Ajouter l'utilisateur au groupe Docker :
+Le projet peut ensuite être lancé :
 
 ```bash
-sudo usermod -aG docker vagrant
-```
-
-Reconnecter la session :
-
-```bash
-exit
-vagrant ssh
-```
-
-Tester :
-
-```bash
-docker version
+docker compose up -d
 ```
 
 ---
@@ -235,50 +370,40 @@ rocky-devops/
 ├── README.md
 │
 ├── scripts/
+│   |
+│   ├── setup-server.sh
+│   ├── install-tools.sh
+│   ├── install-docker.sh
+│   └── create-workspace.sh
 │
-└── documentation/
+└── docs/
 ```
 
 ---
 
-# 🔗 Gestion des projets
+# 🐳 Vérification Docker
 
-Les projets applicatifs peuvent être montés dans la VM grâce aux dossiers partagés Vagrant.
+Dans Rocky Linux :
 
-Exemple :
-
-Structure locale :
-
-```
-ProjetsDevOps/
-
-├── rocky-devops/
-│     └── Vagrantfile
-│
-└── mon-projet/
-      ├── backend
-      ├── frontend
-      └── docker-compose.yml
+```bash
+docker --version
 ```
 
-Dans le `Vagrantfile` :
-
-```ruby
-config.vm.synced_folder "../mon-projet",
-"/home/vagrant/projects/mon-projet"
+```bash
+docker compose version
 ```
 
-Le projet devient accessible dans Rocky Linux :
+Tester :
 
-```
-/home/vagrant/projects/mon-projet
+```bash
+docker run hello-world
 ```
 
 ---
 
 # 🔄 Commandes Vagrant utiles
 
-Démarrer la VM :
+Démarrer :
 
 ```bash
 vagrant up
@@ -296,51 +421,71 @@ Redémarrer :
 vagrant reload
 ```
 
-Se connecter :
+Provisionner :
+
+```bash
+vagrant provision
+```
+
+Synchroniser les fichiers :
+
+```bash
+vagrant rsync
+```
+
+Connexion SSH :
 
 ```bash
 vagrant ssh
 ```
 
-Supprimer la VM :
-
-```bash
-vagrant destroy
-```
-
-Voir l'état :
+Etat :
 
 ```bash
 vagrant status
+```
+
+Supprimer :
+
+```bash
+vagrant destroy
 ```
 
 ---
 
 # 🔐 Pourquoi Rocky Linux ?
 
-Rocky Linux est choisi car il est compatible avec l'écosystème Red Hat Enterprise Linux (RHEL).
+Rocky Linux est un excellent choix pour un laboratoire DevOps car il est compatible avec l'écosystème **Red Hat Enterprise Linux (RHEL)**.
 
-Il permet de pratiquer des technologies utilisées dans les environnements professionnels :
+Il permet d'apprendre des technologies utilisées dans les infrastructures professionnelles :
 
 * SELinux ;
 * firewalld ;
 * systemd ;
-* dnf ;
+* DNF ;
 * administration serveur entreprise.
+
+Rocky Linux est également une alternative moderne à CentOS Linux et permet de développer des compétences transférables vers :
+
+* RHEL ;
+* serveurs cloud ;
+* infrastructures d'entreprise ;
+* environnements Kubernetes.
 
 ---
 
 # 📈 Évolutions prévues
 
-Ce laboratoire pourra évoluer vers :
-
-* [ ] Installation automatique Docker avec scripts ;
-* [ ] Déploiement avec Ansible ;
-* [ ] Configuration Nginx reverse proxy ;
-* [ ] Gestion SSL/TLS ;
-* [ ] Monitoring avec Prometheus/Grafana ;
-* [ ] CI/CD avec GitHub Actions ;
-* [ ] Déploiement Kubernetes local.
+* [x] VM Rocky Linux automatisée avec Vagrant
+* [x] Provisioning Bash
+* [x] Installation Docker automatique
+* [x] Gestion des projets externes
+* [ ] Déploiement avec Ansible
+* [ ] Configuration Nginx reverse proxy
+* [ ] Gestion SSL/TLS
+* [ ] Monitoring Prometheus/Grafana
+* [ ] CI/CD GitHub Actions
+* [ ] Kubernetes local
 
 ---
 
@@ -353,12 +498,13 @@ Ingénieur Logiciel Full Stack | Aspirant DevOps
 Domaines :
 
 * Web & Mobile Development
-* Cloud & Infrastructure
-* Docker
 * Linux Administration
+* Docker
+* Cloud & Infrastructure
+* DevOps
 
 ---
 
 # 📜 Licence
 
-Projet personnel d'apprentissage et de laboratoire DevOps.
+Projet personnel d'apprentissage et laboratoire DevOps.
