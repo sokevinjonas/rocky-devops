@@ -13,6 +13,11 @@ Vagrant.configure("2") do |config|
     "/home/vagrant/projects/student-list",
     type: "rsync"
 
+  # Mount the cvOnline folder from the host to the guest VM
+  config.vm.synced_folder "/home/jonas-dev/Bureau/SassApp/cvOnline",
+    "/home/vagrant/projects/cvOnline",
+    type: "rsync"
+
   # Mount the scripts folder from the host to the guest VM
   config.vm.synced_folder "./scripts",
     "/home/vagrant/scripts",
